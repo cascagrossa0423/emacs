@@ -1,0 +1,41 @@
+(defun my-review-count-chars ()
+  "Count characters in region or current line."
+  (interactive)
+  (cond
+   ((region-active-p)
+    (let ((text (buffer-substring-no-properties
+		 (region-beginning)
+		 (region-end))))
+      (length (region-beginning) (region-end))
+      (message text)))
+   (t
+    (let ((text (buffer-substring-no-properties
+		 (line-beginning-position)
+		 (line-end-position))))
+      (length (line-beginning-position) (line-end-position))
+      (message text)))))
+
+(defvar my-review-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c r") #'my-review-count-chars)
+    map)
+  "Keymap for my-review minor mode.")
+
+(define-minor-mode my-review-mode
+  "My review minor mode."
+  :lighter " Rev"
+  :keymap my-review-mode-map)
+
+(defun my-review-enable ()
+  "Enable my-review-mode."
+  (my-review-mode 1))
+
+(add-hook 'emacs-lisp-mode-hook #'my-review-enable)
+
+(defun my-review-after-save (&rest _args)
+  "Show char count after saving."
+  (message "範囲の文字数は%dです。" _args))
+
+(advice-add 'save-buffer :after #'my-review-after-save)
+
+(provide 'my-review)

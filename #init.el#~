@@ -1,0 +1,230 @@
+
+;; ------------------------------------------------------------
+;; パッケージ管理の初期化
+;; ------------------------------------------------------------
+(require 'package)
+(setq package-archives
+      '(("melpa" . "https://melpa.org/packages/")
+        ("gnu"   . "https://elpa.gnu.org/packages/")))
+(package-initialize)
+
+;; 初回のみ use-package をインストール
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+;; ------------------------------------------------------------
+;; 最近開いたファイルを素早く開く設定（recentf）
+;; ------------------------------------------------------------
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+
+;; ------------------------------------------------------------
+;; Ivy + Swiper + Counsel（検索・補完強化）
+;; ------------------------------------------------------------
+(use-package ivy
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t
+        ivy-count-format "(%d/%d) "))
+
+(use-package swiper
+  :bind (("C-s" . swiper)))
+
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-x b" . ivy-switch-buffer)
+         ("C-x C-r" . counsel-recentf)
+         ("M-y" . counsel-yank-pop))
+  :config
+  (setq counsel-yank-pop-separator "\n---\n"))
+
+
+;; ------------------------------------------------------------
+;; which-key（キーバインドヘルプ）
+;; ------------------------------------------------------------
+(use-package which-key
+  :config
+  (which-key-mode)
+  (setq which-key-idle-delay 0.8))
+
+
+;; ------------------------------------------------------------
+;; avy（高速ジャンプ）
+;; ------------------------------------------------------------
+(use-package avy
+  :bind
+  (("C-:" . avy-goto-char)
+   ("C-'" . avy-goto-word-1)
+   ("M-g f" . avy-goto-line)))
+
+
+;; ------------------------------------------------------------
+;; magit（Emacs で Git を使う）
+;; ------------------------------------------------------------
+(use-package magit
+  :bind (("C-x g" . magit-status)))
+
+;; ------------------------------------------------------------
+;; projectile（プロジェクト管理）
+;; ------------------------------------------------------------
+(use-package projectile
+  :config
+  (projectile-mode +1)
+  :bind
+  ("C-c p" . projectile-command-map))
+
+
+;; Company-modeの設定
+(require 'company)
+
+;; 全体でCompanyモードを有効にする
+(global-company-mode)
+
+;; 待機時間を短くする（デフォルトは0.5秒だが、早く出す設定）
+(setq company-idle-delay 0.2)
+
+;; 1文字入力した時点で補完を出す（デフォルトは3文字）
+(setq company-minimum-prefix-length 1)
+
+;; 候補の選択に C-n / C-p を使えるようにする
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous))
+
+;; エコーエリア（画面下）に関数の引数リストを表示する
+(global-eldoc-mode 1)
+
+;; ------------------------------------------------------------
+;; Emacs Lisp 開発環境の強化
+;; ------------------------------------------------------------
+
+;; Flycheckによるリアルタイム構文チェック
+;; .elファイル編集中にエラーや警告を自動で表示します。
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode 1))
+
+;; smartparensによるS式の構造的編集
+;; 括弧の対応を常に維持し、S式単位での編集を容易にします。
+(use-package smartparens
+  :ensure t
+  :config
+  (require 'smartparens-config)
+  (smartparens-global-mode 1))
+
+;; ------------------------------------------------------------
+;; Mozc (日本語入力)
+;; ------------------------------------------------------------
+(use-package mozc
+  :ensure t ; パッケージがインストールされていない場合、自動的にインストールする
+  :config
+  ;; デフォルトのインプットメソッドをmozcに設定
+  (setq default-input-method "japanese-mozc")
+
+  ;; 日本語入力のオン/オフを C-\ (Ctrl + Backslash) で切り替え
+  (global-set-key (kbd "C-\\") 'toggle-input-method))
+
+;; ------------------------------------------------------------------------
+;; UIのカスタマイズ
+;; ------------------------------------------------------------------------
+
+;; 起動時にウィンドウを最大化する
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
+;; メニューバーを非表示（上部のテキストメニュー）
+(menu-bar-mode -1)
+
+;; ツールバーを非表示（上部のアイコンボタン）
+(tool-bar-mode -1)
+
+;; スクロールバーを非表示（右側のバー）
+(scroll-bar-mode -1)
+
+;; 行番号を常に表示
+(global-display-line-numbers-mode t)
+
+;; タイトルバーにフルパスを表示する
+(setq frame-title-format
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
+
+;; treemacs
+(unless (package-installed-p 'treemacs)
+  (package-install 'treemacs))
+
+;; Treemacsをトグル（表示/非表示）するショートカット
+(global-set-key (kbd "M-0") 'treemacs-select-window) ; M-0でツリーにフォーカス
+(global-set-key (kbd "C-c t") 'treemacs)             ; C-c tで起動
+
+;; doom-themesパッケージのインストール
+(unless (package-installed-p 'doom-themes)
+  (package-install 'doom-themes))
+
+;; テーマをロードする（例として doom-one を選択）
+;; 他にも doom-dracula, doom-nord, doom-molokai など多数あります
+(load-theme 'doom-one t)
+
+;; ネストされた（階層の深い）括弧などの色を強調する設定
+(doom-themes-visual-bell-config)
+;;(doom-themes-neotree-config) ; NeoTreeを使っている場合
+(doom-themes-treemacs-config) ; Treemacsを使っている場合
+
+;; all-the-iconsパッケージのインストール
+(unless (package-installed-p 'all-the-icons)
+  (package-install 'all-the-icons))
+
+;; doom-modelineのインストール
+(unless (package-installed-p 'doom-modeline)
+  (package-install 'doom-modeline))
+
+;; doom-modelineを有効にする（all-the-iconsが必要です）
+(require 'doom-modeline)
+(doom-modeline-mode 1)
+
+;; アイコンを表示する設定
+(setq doom-modeline-icon t)
+
+;; --- Evil (Vim) 設定 ---
+
+(unless (package-installed-p 'evil) (package-install 'evil))
+
+(setq evil-want-keybinding nil) ; evil-collection のために必要
+(setq evil-want-C-u-scroll nil) ; C-u は Emacs の前置引数として使う
+(setq evil-want-C-i-jump nil)   ; Tab キーの挙動を Emacs 標準に合わせる
+
+(require 'evil)
+(evil-mode 1)
+
+;; --- Evil Collection (各モードのVim化) ---
+(unless (package-installed-p 'evil-collection) (package-install 'evil-collection))
+(require 'evil-collection)
+(evil-collection-init)
+
+;; --- 挿入モードでは Emacs キーバインドを優先 ---
+;; これにより、文字入力中に C-n/C-p/C-a/C-e などがそのまま使えます
+(setq evil-insert-state-cursor 'bar) ; 挿入モードではカーソルを棒状にする
+
+;; --- モード切り替えの効率化 ---
+(unless (package-installed-p 'evil-escape) (package-install 'evil-escape))
+(evil-escape-mode)
+(setq-default evil-escape-key-sequence "jk") ; jk で Normal モードへ
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(doom-modeline all-the-icons doom-themes treemacs which-key smartparens projectile mozc magit flycheck evil counsel company avy annalist)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

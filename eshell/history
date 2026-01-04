@@ -1,0 +1,15 @@
+ls
+ls -la
+git status
+ls
+sudo apt update
+sudo apt update
+sudo apt update
+touch ~/.emacs.d/lisp/my-day8.el
+touch ~/.emacs.d/lisp/my-day9.el
+touch ~/.emacs.d/lisp/my-day11.el
+touch ~/.emacs.d/lisp/my-review.el
+cd 
+ls
+touch ~/.emacs.d/lisp/my-day12.el
+ls 
