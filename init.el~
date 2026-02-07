@@ -23,6 +23,8 @@
 
 ;; my-apps (アプリ)
 (add-to-list 'load-path (expand-file-name "lisp/my-apps" user-emacs-directory))
+(require 'app06_todo_list)
+(require 'app07_shopping_list)
 
 ;; core（基盤）
 (add-to-list 'load-path (expand-file-name "lisp/core" user-emacs-directory))
@@ -123,10 +125,6 @@
   :config (recentf-mode 1)
   (setq recentf-max-menu-items 25))
 
-(use-package exwm
-  :config
-  (exwm-enable))
-
 ;; ------------------------------------------------------------
 ;; 6. 日本語入力 (Mozc)
 ;; ------------------------------------------------------------
@@ -164,7 +162,7 @@
  ;; If there is more than one, they won't work right.
  '(org-agenda-files nil)
  '(package-selected-packages
-   '(exwm python-black which-key smartparens projectile mozc magit lsp-ui flycheck evil-escape evil-collection doom-themes doom-modeline dap-mode counsel company all-the-icons)))
+   '(python-black which-key smartparens projectile mozc magit lsp-ui flycheck evil-escape evil-collection doom-themes doom-modeline dap-mode counsel company all-the-icons)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

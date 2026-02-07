@@ -1,0 +1,25 @@
+;;; app03_calculator.el --- 電卓
+
+(defun my-calculator-app (num1 num2 ope)
+  "電卓アプリ。2つの数値と演算子を受け取って計算します。"
+  (interactive "n数1：\nn数2：\ns演算子 (+, -, *, /)：")
+  (cond
+   ;; 1つの条件と処理を ( ) で囲みます
+   ((string= ope "+")
+    (message "結果は %d です" (+ num1 num2)))
+
+   ((string= ope "-")
+    (message "結果は %d です" (- num1 num2)))
+
+   ((string= ope "*")
+    (message "結果は %d です" (* num1 num2)))
+
+   ((string= ope "/")
+    ;; 割り算の時は分母が0だとエラーになるので注意が必要ですが、今はシンプルに
+    (message "結果は %d です" (/ num1 num2)))
+
+   ;; どの条件にも当てはまらない場合（t = true = つねに実行）
+   (t
+    (message "演算子「%s」は正しくありません。" ope))))
+
+(provide 'app03_calculator)

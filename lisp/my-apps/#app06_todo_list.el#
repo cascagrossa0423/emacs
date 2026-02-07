@@ -1,0 +1,18 @@
+;;; app06_todo_list.el --- TODOリストを一括挿入するアプリ
+
+(defun my-todo-app ()
+  "あらかじめ決めたリストをバッファに書き出します。"
+  (interactive)
+  (let ((tasks '("メール返信" "ブログ執筆" "買い物" "掃除"))) ; TODOのリスト
+    
+    (insert "--- 今日のTODOリスト ---\n")
+    
+    ;; dolist は、リストの要素を一つずつ取り出して繰り返します。
+    ;; (dolist (変数名 リスト名) 処理)
+    (dolist (task tasks)
+      (insert (format "[ ] %s\n" task)))
+    
+    (insert "-----------------------\n")))
+
+(provide 'app06_todo_list)
+

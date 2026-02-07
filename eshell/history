@@ -13,3 +13,29 @@ cd
 ls
 touch ~/.emacs.d/lisp/my-day12.el
 ls 
+ls 
+cd .emacs.d/
+ls
+pwd 
+touch .gitignore
+git --version
+clear 
+git config --global user.name "cascagrossa"
+git config --global user.email "heihu0120@gmail.com"
+git config --global --list
+ll
+ls -la
+rm .gitignore~
+ls
+ls -la
+rm #init.el#~
+ls -la
+ls .git
+cat .gitignore 
+git status
+git commit -m "Initial Emacs configuration"
+git status
+mv lisp/lang/my-save-message.el ../
+cd ../
+ls
+mv my-save-message.el .emacs.d/lisp/

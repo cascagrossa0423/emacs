@@ -1,0 +1,16 @@
+;;; app02_fortune.el --- 今日の運勢を占うアプリ
+
+(defun my-fortune-app ()
+  "ランダムに運勢を表示します。"
+  (interactive)
+  ;; let* は、一時的な変数（ローカル変数）を作るための仕組みです。
+  (let* ((fortunes '("大吉" "中吉" "吉" "凶"))           ; リストの定義
+         (index (random (length fortunes)))             ; 0からリストの長さ未満の乱数
+         (result (nth index fortunes)))                 ; index番目の要素を取り出す
+    
+    ;; 結果によってメッセージを分岐させます
+    (if (string= result "大吉")
+        (message "おめでとうございます！ 【%s】 です！" result)
+      (message "今日の運勢は…… 【%s】 です。" result))))
+
+(provide 'app02_fortune)
